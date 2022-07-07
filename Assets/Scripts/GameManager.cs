@@ -35,10 +35,16 @@ public class GameManager : MonoBehaviourPunCallbacks
     private void Start()
     {
         PhotonNetwork.GameVersion = gameVersion;
-        PhotonNetwork.ConnectUsingSettings();
-        PhotonNetwork.AutomaticallySyncScene = true;
+        //PhotonNetwork.ConnectUsingSettings();
+        //PhotonNetwork.AutomaticallySyncScene = true;
 
         SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    public bool ConnectToServer(string account)
+    {
+        PhotonNetwork.NickName = account;
+        return PhotonNetwork.ConnectUsingSettings();
     }
 
     public void JoinGameRoom(string roomName)
