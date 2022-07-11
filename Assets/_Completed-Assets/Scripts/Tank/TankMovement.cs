@@ -20,6 +20,11 @@ namespace Complete
         private float m_OriginalPitch;              // The pitch of the audio source at the start of the scene.
         private ParticleSystem[] m_particleSystems; // References to all the particles systems used by the Tanks
 
+        [SerializeField] Transform turrentObj;
+        public float turrentTurnSpeed;
+        private float turrentTurnInputValue;
+        private string turrentAxisName;
+
         private void Awake ()
         {
             m_Rigidbody = GetComponent<Rigidbody> ();
@@ -64,6 +69,8 @@ namespace Complete
             // The axes names are based on player number.
             m_MovementAxisName = "Vertical";
             m_TurnAxisName = "Horizontal";
+            turrentAxisName = "TurrentHorizontal";
+
 
             // Store the original pitch of the audio source.
             m_OriginalPitch = m_MovementAudio.pitch;
@@ -75,6 +82,9 @@ namespace Complete
             // Store the value of both input axes.
             m_MovementInputValue = Input.GetAxis (m_MovementAxisName);
             m_TurnInputValue = Input.GetAxis (m_TurnAxisName);
+            turrentTurnInputValue = Input.GetAxis(turrentAxisName);
+
+            Debug.Log($"Turrent turn input: {turrentTurnInputValue}");
 
             EngineAudio ();
         }
@@ -113,6 +123,7 @@ namespace Complete
             // Adjust the rigidbodies position and orientation in FixedUpdate.
             Move ();
             Turn ();
+            TurrentTurn();
         }
 
 
@@ -136,6 +147,15 @@ namespace Complete
 
             // Apply this rotation to the rigidbody's rotation.
             m_Rigidbody.MoveRotation (m_Rigidbody.rotation * turnRotation);
+        }
+
+        private void TurrentTurn()
+        {
+            float turn = turrentTurnInputValue * m_TurnSpeed * Time.deltaTime;
+            
+            Quaternion turnRotation = Quaternion.Euler(0f, turn, 0f);
+
+            turrentObj.transform.Rotate(turnRotation.eulerAngles);
         }
     }
 }
