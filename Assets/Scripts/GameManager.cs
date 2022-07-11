@@ -123,12 +123,12 @@ public class GameManager : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsMasterClient)
         {
             Debug.Log("Created Room");
-            PhotonNetwork.LoadLevel("GameScene");
         }
         else
         {
             Debug.Log("Joined Room");
         }
+        PhotonNetwork.LoadLevel("GameScene");
     }
 
     #endregion Callback
