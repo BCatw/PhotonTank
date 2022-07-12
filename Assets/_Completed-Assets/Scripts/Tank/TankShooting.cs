@@ -1,21 +1,10 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
+using Photon.Realtime;
 
 namespace Complete
 {
-    public class FireData
-    {
-        public Transform fireTransform;
-        public float fireForce;
-
-        public FireData(Transform transform, float force)
-        {
-            fireTransform = transform;
-            fireForce = force;
-        }
-    }
-
     public class TankShooting : MonoBehaviourPunCallbacks
     {
         public int m_PlayerNumber = 1;              // Used to identify the different players.
@@ -109,8 +98,7 @@ namespace Complete
             // Set the shell's velocity to the launch force in the fire position's forward direction.
             shellInstance.velocity = m_CurrentLaunchForce * m_FireTransform.forward;
 
-            FireData data = new FireData(m_FireTransform,m_CurrentLaunchForce);
-            photonView.RPC("FireOther", RpcTarget.Others, data);
+            photonView.RPC("FireOther", RpcTarget.Others, m_FireTransform.position, m_CurrentLaunchForce);
 
             // Change the clip to the firing clip and play it.
             m_ShootingAudio.clip = m_FireClip;
@@ -121,14 +109,14 @@ namespace Complete
         }
 
         [PunRPC]
-        private void FireOther(FireData fireData)
+        private void FireOther(Vector3 posit, float force)
         {
             m_Fired = true;
 
-            Rigidbody shellInstance =
-                Instantiate(m_Shell, fireData.fireTransform.position, fireData.fireTransform.rotation) as Rigidbody;
-            shellInstance.velocity = fireData.fireForce * fireData.fireTransform.forward;
+            Rigidbody shellInstance = Instantiate(m_Shell, posit, m_FireTransform.rotation) as Rigidbody;
+            shellInstance.velocity = force * m_FireTransform.forward;
             m_CurrentLaunchForce = m_MinLaunchForce;
         }
     }
+
 }

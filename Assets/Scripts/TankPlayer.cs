@@ -18,7 +18,6 @@ public class TankPlayer : MonoBehaviour
         if (!photonView.IsMine)
         {
             movement.enabled = false;
-            movement.enabled = false;
         }
     }
 }
